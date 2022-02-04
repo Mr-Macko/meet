@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/Mr-Macko/meet/static/css/main.073c9b0a.css",
-    "main.js": "/Mr-Macko/meet/static/js/main.4bd6c91d.js",
-    "static/js/377.dda790c9.chunk.js": "/Mr-Macko/meet/static/js/377.dda790c9.chunk.js",
-    "service-worker.js": "/Mr-Macko/meet/service-worker.js",
-    "static/media/logo.svg": "/Mr-Macko/meet/static/media/logo.103b5fa18196d5665a7e12318285c916.svg",
-    "index.html": "/Mr-Macko/meet/index.html",
-    "main.073c9b0a.css.map": "/Mr-Macko/meet/static/css/main.073c9b0a.css.map",
-    "main.4bd6c91d.js.map": "/Mr-Macko/meet/static/js/main.4bd6c91d.js.map",
-    "377.dda790c9.chunk.js.map": "/Mr-Macko/meet/static/js/377.dda790c9.chunk.js.map"
+    "main.css": "/Mr-Macko/meet.git/static/css/main.073c9b0a.css",
+    "main.js": "/Mr-Macko/meet.git/static/js/main.77ce59d9.js",
+    "static/js/377.dda790c9.chunk.js": "/Mr-Macko/meet.git/static/js/377.dda790c9.chunk.js",
+    "service-worker.js": "/Mr-Macko/meet.git/service-worker.js",
+    "static/media/logo.svg": "/Mr-Macko/meet.git/static/media/logo.103b5fa18196d5665a7e12318285c916.svg",
+    "index.html": "/Mr-Macko/meet.git/index.html",
+    "main.073c9b0a.css.map": "/Mr-Macko/meet.git/static/css/main.073c9b0a.css.map",
+    "main.77ce59d9.js.map": "/Mr-Macko/meet.git/static/js/main.77ce59d9.js.map",
+    "377.dda790c9.chunk.js.map": "/Mr-Macko/meet.git/static/js/377.dda790c9.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.073c9b0a.css",
-    "static/js/main.4bd6c91d.js"
+    "static/js/main.77ce59d9.js"
   ]
 }
