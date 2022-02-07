@@ -180,7 +180,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/auth-server/dev/1644275725872-2022-02-07T23:15:25.872Z/auth-server.zip"
+                "S3Key": "serverless/auth-server/dev/1644276656991-2022-02-07T23:30:56.991Z/auth-server.zip"
               },
               "Handler": "handler.getAuthURL",
               "Runtime": "nodejs12.x",
@@ -301,7 +301,7 @@
               "GetAuthURLLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1644275721923": {
+          "ApiGatewayDeployment1644276653085": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -520,7 +520,7 @@
     "artifact": "/Users/max/careerfoundry/meet/auth-server/.serverless/auth-server.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/auth-server/dev/1644275725872-2022-02-07T23:15:25.872Z",
+    "artifactDirectoryName": "serverless/auth-server/dev/1644276656991-2022-02-07T23:30:56.991Z",
     "artifact": "auth-server.zip"
   }
 }
