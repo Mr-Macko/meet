@@ -34,9 +34,9 @@ functions:
   getAuthURL:
     handler: handler.getAuthURL
     events:
-      - http:
-          path: api/get-auth-url
-          method: get
+      http:
+        path: api/get-auth-url
+        method: get
 
 # you can overwrite defaults here
 #  stage: dev
