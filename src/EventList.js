@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import Event from "./Event";
+import { Event } from "./Event";
 
-class EventList extends Component {
+export class EventList extends Component {
     render () {
         const { events } = this.props;
         return (
@@ -16,4 +16,4 @@ class EventList extends Component {
     }
 }
 
-export default EventList;
+// export default EventList;
