@@ -1,6 +1,6 @@
 import { mockData } from './mock-data';
 import axios from 'axios';
-import nprogress from 'nprogress';
+import NProgress from 'nprogress';
 
 /**
  *
@@ -35,7 +35,7 @@ const checkToken = async (accessToken) => {
     }
   
   
-    const token = await getAccessToken();
+    const token = await getAccessToken ();
   
     if (token) {
       removeQuery();
@@ -51,7 +51,7 @@ const checkToken = async (accessToken) => {
     }
   };
 
-export const getAccessTokes = async () => {
+export const getAccessToken = async () => {
     const accessToken = localStorage.getItem('access_token');
 
     const tokenCheck = accessToken && (await checkToken(accessToken));
