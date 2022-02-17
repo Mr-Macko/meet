@@ -20,8 +20,8 @@ export class NumberOfEvents extends Component {
             <input 
             type="number" 
             className="number"
-            value={this.state.numberOfEvents} 
-            onChange={this.handleInputChange}
+            value={this.props.numberOfEvents} 
+            onChange={(e) => this.props.updateNumberOfEvents(e)}
             />
         </div>
 

@@ -5,6 +5,7 @@ import { EventList } from '../EventList';
 import CitySearch from '../CitySearch'
 import { mockData } from '../mock-data';
 import { extractLocations, getEvents } from '../api';
+import { NumberOfEvents } from '../NumberOfEvents';
 
 // unit testing
 describe('<App /> component', () => {
@@ -60,6 +61,23 @@ describe('<App /> integration', () => {
       await suggestionItems.at(suggestionItems.length - 1).simulate('click');
       const allEvents = await getEvents();
       expect(AppWrapper.state('events')).toEqual(allEvents);
+      AppWrapper.unmount();
+    });
+
+    test('App passes "numberOfEvents" as a prop to NumberOfEvents file', () => {
+      const AppWrapper = mount(<App />);
+      const AppEventNumberState = AppWrapper.state('numberOfEvents');
+      expect(AppEventNumberState).not.toEqual(undefined);
+      expect(AppWrapper.find(NumberOfEvents).props().numberOfEvents).toEqual(AppEventNumberState);
+      AppWrapper.unmount();
+    });
+
+    test('"numberOfEvents" state of App is updated with new Number of Events', () => {
+      const AppWrapper = mount(<App />);
+      const eventObject = { target: { value: 32 } };
+      const NumberOfEventsWrapper = AppWrapper.find(NumberOfEvents);
+      NumberOfEventsWrapper.find('.number').simulate('change', eventObject);
+      expect(AppWrapper.state('numberOfEvents')).toBe(32);
       AppWrapper.unmount();
     });
 })
