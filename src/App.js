@@ -46,13 +46,6 @@ class App extends Component {
     });
   };
 
-  updateNumberOfEvents = async (e) => {
-    const newNumber = e.target.value ? parseInt(e.target.value) : 32;
-    await this.setState({ numberOfEvents: newNumber });
-    this.updateEvents(this.state.currentLocation, this.state.numberOfEvents);
-  };
-
-
   render() {
     return (
       <div className="App">
