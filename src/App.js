@@ -6,6 +6,7 @@ import { getEvents, extractLocations, checkToken, getAccessToken } from './api';
 import { NumberOfEvents } from './NumberOfEvents';
 import './nprogress.css';
 import WelcomeScreen from './WelcomeScreen';
+import { InfoAlert } from './Alert';
 
 class App extends Component {
   state = {
@@ -13,7 +14,8 @@ class App extends Component {
     locations: [],
     showWelcomeScreen: undefined,
     numberOfEvents: 32,
-    currentLocation: "all"
+    currentLocation: "all",
+    isOnline: true
   };
 
   async componentDidMount() { 
@@ -29,7 +31,11 @@ class App extends Component {
           this.setState({ events, locations: extractLocations(events) }); 
         } 
       }); 
-    } 
+    } if (!navigator.onLine) {
+      this.setState({
+        isOnline: false,
+      });
+    }
   }
 
   componentWillUnmount(){
@@ -37,6 +43,7 @@ class App extends Component {
   }
 
   updateEvents = (location, eventCount = this.state.numberOfEvents) => {
+    this.setState({ isOnline: navigator.onLine ? true: false });
     this.mounted = true;
     getEvents().then((events) => {
       const locationEvents =
@@ -69,6 +76,7 @@ class App extends Component {
           locations={this.state.locations} 
           updateEvents={this.updateEvents} />
         <NumberOfEvents updateEventNumbers={this.updateEventNumbers} />
+        { !navigator.onLine ? (<InfoAlert text='You are offline.' />) : (<InfoAlert text=' ' />)}
         <EventList events={this.state.events} />
         <WelcomeScreen 
           showWelcomeScreen={this.state.showWelcomeScreen} 
