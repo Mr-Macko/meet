@@ -17,22 +17,22 @@ class App extends Component {
     showWelcomeScreen: undefined,
     numberOfEvents: 32,
     currentLocation: "all",
-    isOnline: true
+    isOnline: false
   };
 
-  async componentDidMount() { 
-    this.mounted = true; 
-    const accessToken = localStorage.getItem('access_token'); 
-    const isTokenValid = (await checkToken(accessToken)).error ? false : true; 
+  async componentDidMount() {
+    this.mounted = true;
+    const accessToken = localStorage.getItem('access_token');
+    const isTokenValid = (await checkToken(accessToken)).error ? false : true;
     const searchParams = new URLSearchParams(window.location.search);
-    const code = searchParams.get("code"); 
-    this.setState({ showWelcomeScreen: !(code || isTokenValid) }); 
-    if ((code || isTokenValid) && this.mounted) { 
-      getEvents().then((events) => { 
-        if (this.mounted) { 
-          this.setState({ events, locations: extractLocations(events) }); 
-        } 
-      }); 
+    const code = searchParams.get("code");
+    this.setState({ showWelcomeScreen: !(code || isTokenValid) });
+    if ((code || isTokenValid) && this.mounted) {
+      getEvents().then((events) => {
+        if (this.mounted) {
+          this.setState({ events, locations: extractLocations(events) });
+        }
+      });
     } if (!navigator.onLine) {
       this.setState({
         isOnline: false,
@@ -40,12 +40,12 @@ class App extends Component {
     }
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.mounted = false;
   }
 
   updateEvents = (location, eventCount = this.state.numberOfEvents) => {
-    this.setState({ isOnline: navigator.onLine ? true: false });
+    this.setState({ isOnline: navigator.onLine ? true : false });
     this.mounted = true;
     getEvents().then((events) => {
       const locationEvents =
@@ -68,51 +68,57 @@ class App extends Component {
   };
 
   getData = () => {
-    const {locations, events} = this.state;
-    const data = locations.map((location)=>{
+    const { locations, events } = this.state;
+    const data = locations.map((location) => {
       const number = events.filter((event) => event.location === location).length
       const city = location.split(', ').shift()
-      return {city, number};
+      return { city, number };
     })
     return data;
   };
 
   render() {
-    if (this.state.showWelcomeScreen === undefined) 
+    if (this.state.showWelcomeScreen === undefined)
       return <div className="App" />
 
     return (
       <div className="App">
-        <h1>Meet App</h1>
-        <p>Choose your city</p>
-        <CitySearch 
-          locations={this.state.locations} 
-          updateEvents={this.updateEvents} />
-        <NumberOfEvents updateEventNumbers={this.updateEventNumbers} />
-        { !navigator.onLine ? (<InfoAlert text='You are offline.' />) : (<InfoAlert text=' ' />)}
+        {this.state.isOnline === true ?
+          <div>
+            <h1>Meet App</h1>
+            <p>Choose your city</p>
+            <CitySearch
+              locations={this.state.locations}
+              updateEvents={this.updateEvents} />
+            <NumberOfEvents updateEventNumbers={this.updateEventNumbers} />
+            {!navigator.onLine ? (<InfoAlert text='You are offline.' />) : (<InfoAlert text=' ' />)}
 
-        <div className="data-vis-wrapper">
-        <EventGenre events={this.state.events} />
-        <ResponsiveContainer height={400} >
-          <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-            <CartesianGrid />
-            <XAxis type="category" dataKey="city" name="city" />
-            <YAxis
-              allowDecimals={false}
-              type="number"
-              dataKey="number"
-              name="number of events"
-            />
-            <Tooltip cursor={{ strokeDasharray: "3 3" }} />
-            <Scatter data={this.getData()} fill="#8884d8" />
-          </ScatterChart>
-        </ResponsiveContainer>
-        </div>
+            <div className="data-vis-wrapper">
+              <EventGenre events={this.state.events} />
+              <ResponsiveContainer height={400} >
+                <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                  <CartesianGrid />
+                  <XAxis type="category" dataKey="city" name="city" />
+                  <YAxis
+                    allowDecimals={false}
+                    type="number"
+                    dataKey="number"
+                    name="number of events"
+                  />
+                  <Tooltip cursor={{ strokeDasharray: "3 3" }} />
+                  <Scatter data={this.getData()} fill="#8884d8" />
+                </ScatterChart>
+              </ResponsiveContainer>
+            </div>
 
-        <EventList events={this.state.events} />
-        <WelcomeScreen 
-          showWelcomeScreen={this.state.showWelcomeScreen} 
-          getAccessToken={() => { getAccessToken() }} />
+            <EventList events={this.state.events} />
+          </div>
+          : null}
+        {this.state.isOnline === false ?
+          <WelcomeScreen
+            showWelcomeScreen={this.state.showWelcomeScreen}
+            getAccessToken={() => { getAccessToken() }} />
+          : null}
       </div>
     );
   }
