@@ -8,6 +8,7 @@ export class Event extends Component {
 
     handleClick= ()  => {
         this.setState({
+            ...this.state,
             collapsed: !this.state.collapsed
         });
     };
