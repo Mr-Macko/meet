@@ -14,30 +14,39 @@ class App extends Component {
   state = {
     events: [],
     locations: [],
-    showWelcomeScreen: undefined,
     numberOfEvents: 32,
-    currentLocation: "all",
-    isOnline: false
+    currentLocation: 'all',
+    showWelcomeScreen: undefined
   };
 
   async componentDidMount() {
     this.mounted = true;
-    const accessToken = localStorage.getItem('access_token');
-    const isTokenValid = (await checkToken(accessToken)).error ? false : true;
-    const searchParams = new URLSearchParams(window.location.search);
-    const code = searchParams.get("code");
-    this.setState({ showWelcomeScreen: !(code || isTokenValid) });
-    if ((code || isTokenValid) && this.mounted) {
+    if (navigator.onLine && !window.location.href.startsWith('http://localhost')) {
+      const accessToken = localStorage.getItem('access_token');
+      const isTokenValid = (await checkToken(accessToken)).error ? false : true;
+      const searchParams = new URLSearchParams(window.location.search);
+      const code = searchParams.get('code');
+      this.setState({ showWelcomeScreen: !(code || isTokenValid) });
+      if ((code || isTokenValid) && this.mounted) {
+        getEvents().then((events) => {
+          if (this.mounted) {
+            this.setState({
+              events: events.slice(0, this.state.numberOfEvents),
+              locations: extractLocations(events),
+            });
+          }
+        });
+      }
+    } 
+    
+    else {
       getEvents().then((events) => {
         if (this.mounted) {
-          this.setState({ events, locations: extractLocations(events) });
+          this.setState({ events, locations: extractLocations(events) })
         }
       });
-    } if (!navigator.onLine) {
-      this.setState({
-        isOnline: false,
-      });
     }
+
   }
 
   componentWillUnmount() {
@@ -45,26 +54,34 @@ class App extends Component {
   }
 
   updateEvents = (location, eventCount = this.state.numberOfEvents) => {
-    this.setState({ isOnline: navigator.onLine ? true : false });
-    this.mounted = true;
     getEvents().then((events) => {
-      const locationEvents =
-        location === "all" ? events : events.filter((event) => event.location === location);
-      const eventNumberFilter =
-        eventCount > locationEvents.length ? locationEvents : locationEvents.slice(0, eventCount);
+      const locationEvents = (location === 'all')
+        ? events
+        : events.filter((event) => event.location === location);
       if (this.mounted) {
         this.setState({
-          events: eventNumberFilter,
+          events: locationEvents.slice(0, eventCount),
+          location: location,
+          currentLocation: location
         });
       }
     });
   };
 
-  updateEventNumbers = (eventNumbers) => {
-    this.setState({
-      numberOfEvents: eventNumbers,
-    });
-    this.updateEvents(this.state.location, eventNumbers);
+  updateNumberOfEvents = async (e) => {
+    const newNumber = e.target.value ? parseInt(e.target.value) : 50;
+    if (newNumber <= 0 || newNumber > 50) {
+      await this.setState({
+        numberOfEvents: newNumber,
+        errorAlert: 'Please set a number between 1 and 50'
+      });
+    } else {
+      await this.setState({
+        errorAlert: '',
+        numberOfEvents: newNumber
+      });
+      this.updateEvents(this.state.currentLocation, this.state.numberOfEvents);
+    }
   };
 
   getData = () => {
@@ -78,21 +95,34 @@ class App extends Component {
   };
 
   render() {
-    if (this.state.showWelcomeScreen === undefined)
-      return <div className="App" />
+    if (this.state.showWelcomeScreen === undefined &&
+      navigator.onLine && !window.location.href.startsWith('http://localhost')
+    ) {
+      return <div className='App' />;
+    }
+    if (this.state.showWelcomeScreen === true)
+      return (
+        <WelcomeScreen
+          showWelcomeScreen={this.state.showWelcomeScreen}
+          getAccessToken={() => {
+            getAccessToken();
+          }}
+        />
+      );
 
     return (
       <div className="App">
-        {this.state.isOnline === true ?
+        {/* <pre>{JSON.stringify(this.state, null, 2)}</pre> */}
           <div>
             <h1>Meet App</h1>
             <p>Choose your city</p>
             <CitySearch
               locations={this.state.locations}
               updateEvents={this.updateEvents} />
-            <NumberOfEvents updateEventNumbers={this.updateEventNumbers} />
+            <NumberOfEvents 
+            numberOfEvents={this.state.numberOfEvents}
+            updateNumberOfEvents={this.updateNumberOfEvents} />
             {!navigator.onLine ? (<InfoAlert text='You are offline.' />) : (<InfoAlert text=' ' />)}
-
             <div className="data-vis-wrapper">
               <EventGenre events={this.state.events} />
               <ResponsiveContainer height={400} >
@@ -110,15 +140,11 @@ class App extends Component {
                 </ScatterChart>
               </ResponsiveContainer>
             </div>
-
             <EventList events={this.state.events} />
           </div>
-          : null}
-        {this.state.isOnline === false ?
           <WelcomeScreen
             showWelcomeScreen={this.state.showWelcomeScreen}
             getAccessToken={() => { getAccessToken() }} />
-          : null}
       </div>
     );
   }
