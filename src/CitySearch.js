@@ -10,17 +10,16 @@ class CitySearch extends Component {
 
   handleInputChanged = (event) => {
     const value = event.target.value;
-    this.setState({ ...this.state, showSuggestions: true });
-    const suggestions = this.props.locations.filter(loc => loc.toUpperCase().indexOf(value.toUpperCase()) > -1);
+    const suggestions = this.props.locations.filter((location) => {
+      return location.toUpperCase().indexOf(value.toUpperCase()) > -1;
+    });
     if (suggestions.length === 0) {
       this.setState({
-        ...this.state,
         query: value,
-        infoText: 'We can not find the city you are looking for. Please try another city.',
+        infoText: 'We can not find the city you are looking for. Please try another city.'
       });
     } else {
       return this.setState({
-        ...this.state,
         query: value,
         suggestions,
         infoText: ''
@@ -30,7 +29,6 @@ class CitySearch extends Component {
 
   handleItemClicked = (suggestion) => {
     this.setState({
-      ...this.state,
       query: suggestion,
       showSuggestions: false
     });
