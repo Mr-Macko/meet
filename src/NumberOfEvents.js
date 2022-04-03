@@ -6,7 +6,6 @@ export class NumberOfEvents extends Component {
   render() {
     return (
       <div className='NumberOfEvents'>
-        {/* <label className='numbersearch-label' for='name'>Number of events:</label> */}
         <p>Number of Events</p>
         <br></br>
         <input
